@@ -1,32 +1,33 @@
-# Política de Segurança
+# Security Policy
 
-## Reportar uma vulnerabilidade
+> 🌐 **English** · [Português](SECURITY.pt-BR.md)
 
-**Não** abra issues públicas para vulnerabilidades de segurança.
+## Reporting a vulnerability
 
-Use o **GitHub Private Vulnerability Reporting** (aba *Security* →
-*Report a vulnerability*) ou envie um e-mail para **security@vantar.dev**.
+Please do **not** open public issues for security vulnerabilities.
 
-Inclua, quando possível:
+Use **GitHub Private Vulnerability Reporting** (the *Security* tab →
+*Report a vulnerability*) or email **security@vantar.dev**.
 
-- descrição e impacto;
-- passos para reproduzir (PoC);
-- versão/commit afetado;
-- mitigação sugerida.
+When possible, include:
 
-Faremos a triagem e responderemos o mais rápido possível. Pedimos
-**divulgação coordenada**: dê-nos um prazo razoável para corrigir antes de
-tornar o problema público. Reconhecemos publicamente quem reporta (se desejado).
+- description and impact;
+- steps to reproduce (PoC);
+- affected version/commit;
+- suggested mitigation.
 
-## Escopo
+We will triage and respond as soon as possible. We ask for **coordinated
+disclosure**: give us a reasonable window to fix before going public. We credit
+reporters publicly (if desired).
 
-- Núcleo aberto (OWASP Security Design Review Framework) e a implementação de
-  referência neste repositório.
-- Práticas já adotadas: RLS multi-tenant, JWT RS256 + refresh com rotação, MFA
-  TOTP, rate limiting, security headers, auditoria imutável, imagens assinadas
-  (cosign) com proveniência SLSA. Ver [`docs/supply-chain.md`](docs/supply-chain.md).
+## Scope
 
-## Versões suportadas
+- The open core (OWASP Security Design Review Framework) and the reference
+  implementation in this repository.
+- Practices already in place: multi-tenant RLS, JWT RS256 + refresh with
+  rotation, TOTP MFA, rate limiting, security headers, immutable audit trail.
 
-Enquanto o projeto está em desenvolvimento inicial (`0.x`), apenas o último
-`main`/release recebe correções de segurança.
+## Supported versions
+
+While the project is in early development (`0.x`), only the latest
+`main`/release receives security fixes.

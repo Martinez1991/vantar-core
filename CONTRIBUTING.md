@@ -1,49 +1,45 @@
-# Contribuindo
+# Contributing
 
-Obrigado pelo interesse em contribuir! O **OWASP Security Design Review
-Framework** (núcleo aberto do Vantar) aceita contribuições da comunidade sob a
-licença [Apache-2.0](LICENSE). Ao participar, você concorda com o
-[Código de Conduta](CODE_OF_CONDUCT.md).
+> 🌐 **English** · [Português](CONTRIBUTING.pt-BR.md)
 
-## Antes de começar
+Thank you for your interest! The **OWASP Security Design Review Framework**
+(Vantar's open core) welcomes community contributions under the
+[Apache-2.0](LICENSE) license. By participating, you agree to the
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
-- Veja o [`ROADMAP.md`](ROADMAP.md) e as [issues](../../issues) abertas.
-- Para mudanças grandes, abra primeiro uma issue/discussion para alinhar escopo.
-- Entenda a fronteira **Open Core** em [`EDITIONS.md`](EDITIONS.md): contribuições
-  ao framework aberto são sempre bem-vindas; mudanças em módulos `EE` (`ai`,
-  `agents`, `integrations`, `auth/sso`) seguem o mesmo fluxo, mas a direção é da
-  mantenedora.
-- **Não reimplemente o OWASP ThreatAtlas.** O threat modeling aberto é
-  gerador/curador e **integra-se** ao ThreatAtlas (system-of-record).
+## Before you start
 
-## Ambiente
+- Check the open [issues](../../issues).
+- For large changes, open an issue/discussion first to align on scope.
+- **Do not reimplement OWASP ThreatAtlas.** The open threat modeling is a
+  generator/curator and **integrates** with ThreatAtlas (the system-of-record).
 
-Pré-requisitos: Node.js ≥ 20, Python ≥ 3.12, Docker.
+## Environment
+
+Requirements: Node.js ≥ 20, Docker.
 
 ```bash
 npm install
-npm run compose:up          # Postgres, Redis, RabbitMQ…
-npm run dev                 # frontend → http://localhost:3000
+npm run compose:up          # Postgres + API
+npm run dev:api
 ```
 
-## Padrões
+## Standards
 
 - **Commits**: [Conventional Commits](https://www.conventionalcommits.org)
   (`feat:`, `fix:`, `docs:`, `test:`, `chore:`…).
-- **Testes**: toda mudança de comportamento vem com testes. Rode antes do PR:
+- **Tests**: every behavior change ships with tests. Run before the PR:
   ```bash
   npm run test --workspace @vantar/api
-  npm run test --workspace @vantar/web
-  npm run test:e2e --workspace @vantar/api   # requer Postgres + role vantar_app
-  (cd apps/agents && python -m pytest tests --cov=app --cov-fail-under=80)
+  npm run test:e2e --workspace @vantar/api   # needs Postgres + the vantar_app role
   ```
-- **Cobertura**: o CI trava o núcleo (services/guards/helpers); não baixe os limiares.
-- **Honestidade de engenharia**: sem mocks que fingem sucesso; degradação
-  explícita quando uma dependência externa não está configurada.
+- **Coverage**: CI gates the core (services/guards/helpers); do not lower thresholds.
+- **Engineering honesty**: no mocks that fake success; explicit degradation when
+  an external dependency is not configured.
 
 ## DCO (Developer Certificate of Origin)
 
-Assine seus commits com `-s` (declara que você tem o direito de contribuir o código):
+Sign your commits with `-s` (certifies you have the right to contribute the code):
 
 ```bash
 git commit -s -m "feat: ..."
@@ -51,11 +47,11 @@ git commit -s -m "feat: ..."
 
 ## Pull Requests
 
-1. Faça fork e crie um branch a partir de `main`.
-2. Garanta build, lint e testes verdes localmente.
-3. Abra o PR descrevendo o problema, a solução e como verificou.
-4. Um PR por feature; mantenha o diff focado.
+1. Fork and branch from `main`.
+2. Ensure build, lint and tests are green locally.
+3. Open the PR describing the problem, the solution and how you verified it.
+4. One PR per feature; keep the diff focused.
 
-## Segurança
+## Security
 
-Vulnerabilidades **não** vão para issues públicas — veja [`SECURITY.md`](SECURITY.md).
+Vulnerabilities do **not** go to public issues — see [`SECURITY.md`](SECURITY.md).

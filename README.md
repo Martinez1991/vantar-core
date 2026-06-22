@@ -2,68 +2,71 @@
 
 # OWASP Security Design Review Framework
 
-**Núcleo aberto do Vantar — Security Design Review, Threat Modeling e Risk Analysis.**
+**The open core of Vantar — Security Design Review, Threat Modeling and Risk Analysis.**
 
-`Apache-2.0` · headless (API) · **Complementar** ao OWASP ThreatAtlas
+`Apache-2.0` · headless (API) · **Complementary** to OWASP ThreatAtlas
+
+> 🌐 **English** · [Português](README.pt-BR.md)
 
 </div>
 
 ---
 
-## O que é
+## What it is
 
-Framework aberto e **vendor-neutral** para **Security Design Review** na fase de
-concepção (*Shift-Left Security*). Entrega o conteúdo e a API; **não concorre**
-com o OWASP ThreatAtlas — **integra-se** a ele (push/pull), que permanece o
-system-of-record colaborativo de threat modeling.
+An open, **vendor-neutral** framework for **Security Design Review** at the
+design stage (*Shift-Left Security*). It delivers the content and the API; it
+**does not compete** with OWASP ThreatAtlas — it **integrates** with it
+(push/pull), which remains the collaborative system-of-record for threat
+modeling.
 
-### Conteúdo aberto
+### Open content
 
-- **Questionários de arquitetura** + scoring de maturidade
-- **Framework de análise de risco** (P×I, residual, aceite)
-- **Biblioteca de requisitos ASVS**
-- **Threat Modeling** (gerador/curador STRIDE + **integração ThreatAtlas**)
-- **Templates de Security Review** + relatório por projeto
-- **API REST pública** (OpenAPI em `/docs`)
-- **Self-host de referência** (Docker Compose), multi-tenant com Postgres RLS
+- **Architecture questionnaires** + maturity scoring
+- **Risk analysis framework** (likelihood × impact, residual, acceptance)
+- **ASVS requirements library**
+- **Threat Modeling** (STRIDE generator/curator + **ThreatAtlas integration**)
+- **Security Review templates** + per-project report
+- **Public REST API** (OpenAPI at `/docs`)
+- **Reference self-host** (Docker Compose), multi-tenant with Postgres RLS
 
-> A oferta **Enterprise** (SaaS gerenciado, IA AppSec, integrações
-> GitHub/GitLab/Jira/Confluence, SSO/SCIM, relatórios executivos, suporte) é
-> comercial e vive em repositório separado. Este framework funciona **sem** ela.
+> The **Enterprise** offering (managed SaaS, AppSec AI, GitHub/GitLab/Jira/
+> Confluence integrations, SSO/SCIM, executive reports, support) is commercial
+> and lives in a separate repository. This framework works **without** it.
 
-## Começando
+## Getting started
 
-Pré-requisitos: Node.js ≥ 20, Docker.
+Requirements: Node.js ≥ 20, Docker.
 
 ```bash
 npm install
-npm run compose:up            # Postgres + API (migrations + seed automáticos)
+npm run compose:up            # Postgres + API (migrations + seed automatic)
 # API → http://localhost:4000  ·  OpenAPI → http://localhost:4000/docs
 ```
 
-Sem Docker (dev):
+Without Docker (dev):
 
 ```bash
 npm install
-# suba um Postgres e provisione o role do app:
+# start a Postgres and provision the app role:
 #   psql ... -f infra/postgres/init/02-app-role.sql
 npm run migration:run --workspace @vantar/api
 npm run dev:api
 ```
 
-## Arquitetura
+## Architecture
 
-| Plano | Stack |
+| Plane | Stack |
 |---|---|
 | **Business Plane** | NestJS + TypeScript |
-| **Data** | PostgreSQL (RLS multi-tenant), migrations TypeORM |
-| **AuthN/Z** | JWT RS256 + refresh (rotação) + MFA TOTP · RBAC |
-| **System-of-record** | OWASP ThreatAtlas (integração push/pull) |
+| **Data** | PostgreSQL (multi-tenant RLS), TypeORM migrations |
+| **AuthN/Z** | JWT RS256 + refresh (rotation) + TOTP MFA · RBAC |
+| **System-of-record** | OWASP ThreatAtlas (push/pull integration) |
 
-## Comunidade
+## Community
 
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) · [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) · [`SECURITY.md`](SECURITY.md)
-- Plataforma Enterprise: https://github.com/Martinez1991/vantar-enterprise
-- Site: https://github.com/Martinez1991/vantar-site
+- Enterprise platform: https://github.com/Martinez1991/vantar-enterprise
+- Website: https://github.com/Martinez1991/vantar-site
 
-`Apache-2.0` — veja [`LICENSE`](LICENSE).
+`Apache-2.0` — see [`LICENSE`](LICENSE).

@@ -1,37 +1,38 @@
-# Código de Conduta
+# Code of Conduct
 
-Este projeto adota o **Contributor Covenant**, versão 2.1.
+> 🌐 **English** · [Português](CODE_OF_CONDUCT.pt-BR.md)
 
-## Nosso compromisso
+This project adopts the **Contributor Covenant**, version 2.1.
 
-No interesse de fomentar uma comunidade aberta e acolhedora, nós, como
-contribuidores e mantenedores, nos comprometemos a tornar a participação no
-projeto uma experiência livre de assédio para todos — independentemente de
-idade, deficiência, etnia, identidade ou expressão de gênero, nível de
-experiência, nacionalidade, aparência, raça, religião ou orientação sexual.
+## Our pledge
 
-## Nossos padrões
+In the interest of fostering an open and welcoming community, we as contributors
+and maintainers pledge to make participation in our project a harassment-free
+experience for everyone — regardless of age, disability, ethnicity, gender
+identity and expression, level of experience, nationality, personal appearance,
+race, religion, or sexual identity and orientation.
 
-Exemplos de comportamento que contribuem para um ambiente positivo:
+## Our standards
 
-- Demonstrar empatia e cordialidade.
-- Respeitar opiniões, pontos de vista e experiências divergentes.
-- Aceitar críticas construtivas com elegância.
-- Focar no que é melhor para a comunidade.
+Examples of behavior that contributes to a positive environment:
 
-Comportamentos inaceitáveis incluem assédio, linguagem ou imagens sexualizadas,
-ataques pessoais ou políticos, e divulgação de informações privadas de terceiros
-sem permissão.
+- Demonstrating empathy and kindness.
+- Respecting differing opinions, viewpoints, and experiences.
+- Gracefully accepting constructive feedback.
+- Focusing on what is best for the community.
 
-## Aplicação
+Unacceptable behavior includes harassment, sexualized language or imagery,
+personal or political attacks, and publishing others' private information
+without permission.
 
-Casos de comportamento abusivo, de assédio ou de outra forma inaceitável podem
-ser reportados em **conduct@vantar.dev** (ou via mensagem privada a um
-mantenedor). Todas as queixas serão analisadas e investigadas de forma justa e
-confidencial.
+## Enforcement
 
-## Atribuição
+Instances of abusive, harassing, or otherwise unacceptable behavior may be
+reported at **conduct@vantar.dev** (or via a private message to a maintainer).
+All complaints will be reviewed and investigated fairly and confidentially.
 
-Adaptado do [Contributor Covenant](https://www.contributor-covenant.org),
-versão 2.1, disponível em
+## Attribution
+
+Adapted from the [Contributor Covenant](https://www.contributor-covenant.org),
+version 2.1, available at
 <https://www.contributor-covenant.org/version/2/1/code_of_conduct/>.
