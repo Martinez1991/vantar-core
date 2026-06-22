@@ -1,0 +1,40 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  node:
+    name: API (build + unit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run build:api
+      - run: npm run test --workspace @vantar/api
+  e2e:
+    name: E2E (controllers + guards + RLS)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env: { POSTGRES_USER: vantar, POSTGRES_PASSWORD: vantar, POSTGRES_DB: vantar }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U vantar" --health-interval 10s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://vantar:vantar@localhost:5432/vantar
+      APP_DATABASE_URL: postgresql://vantar_app:vantar_app@localhost:5432/vantar
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - name: Provisiona role do app (RLS)
+        run: PGPASSWORD=vantar psql -h localhost -U vantar -d vantar -f infra/postgres/init/02-app-role.sql
+      - name: Migrations
+        run: npm run migration:run --workspace @vantar/api
+      - name: E2E
+        run: npm run test:e2e --workspace @vantar/api

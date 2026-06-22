@@ -1,0 +1,21 @@
+{
+  "name": "vantar-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OWASP Security Design Review Framework — núcleo aberto (headless API). Complementar ao OWASP ThreatAtlas.",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run start:dev --workspace @vantar/api",
+    "build:api": "npm run build --workspace @vantar/api",
+    "migration:run": "npm run migration:run --workspace @vantar/api",
+    "seed": "npm run seed --workspace @vantar/api",
+    "compose:up": "docker compose up -d",
+    "compose:down": "docker compose down"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
