@@ -64,7 +64,7 @@ npm run dev:api
 
 ## Comunidade
 
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) · [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) · [`SECURITY.md`](SECURITY.md)
+- [`CONTRIBUTING.md`](CONTRIBUTING.pt-BR.md) · [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.pt-BR.md) · [`SECURITY.md`](SECURITY.pt-BR.md)
 - Plataforma Enterprise: https://github.com/Martinez1991/vantar-enterprise
 - Site: https://github.com/Martinez1991/vantar-site
 

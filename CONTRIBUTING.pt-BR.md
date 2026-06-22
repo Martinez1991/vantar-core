@@ -5,13 +5,13 @@
 Obrigado pelo interesse em contribuir! O **OWASP Security Design Review
 Framework** (núcleo aberto do Vantar) aceita contribuições da comunidade sob a
 licença [Apache-2.0](LICENSE). Ao participar, você concorda com o
-[Código de Conduta](CODE_OF_CONDUCT.md).
+[Código de Conduta](CODE_OF_CONDUCT.pt-BR.md).
 
 ## Antes de começar
 
-- Veja o [`ROADMAP.md`](ROADMAP.md) e as [issues](../../issues) abertas.
+- Veja o [`ROADMAP.md`](ROADMAP.pt-BR.md) e as [issues](../../issues) abertas.
 - Para mudanças grandes, abra primeiro uma issue/discussion para alinhar escopo.
-- Entenda a fronteira **Open Core** em [`EDITIONS.md`](EDITIONS.md): contribuições
+- Entenda a fronteira **Open Core** em [`EDITIONS.md`](EDITIONS.pt-BR.md): contribuições
   ao framework aberto são sempre bem-vindas; mudanças em módulos `EE` (`ai`,
   `agents`, `integrations`, `auth/sso`) seguem o mesmo fluxo, mas a direção é da
   mantenedora.
@@ -60,4 +60,4 @@ git commit -s -m "feat: ..."
 
 ## Segurança
 
-Vulnerabilidades **não** vão para issues públicas — veja [`SECURITY.md`](SECURITY.md).
+Vulnerabilidades **não** vão para issues públicas — veja [`SECURITY.md`](SECURITY.pt-BR.md).
