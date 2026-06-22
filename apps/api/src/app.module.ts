@@ -8,6 +8,7 @@ import { join } from "path";
 import { DataSource } from "typeorm";
 import { addTransactionalDataSource } from "typeorm-transactional";
 import { buildTypeOrmOptions } from "./database/typeorm.options";
+import { AiModule } from "./ai/ai.module";
 import { AnalyticsModule } from "./analytics/analytics.module";
 import { AuditModule } from "./audit/audit.module";
 import { AuthModule } from "./auth/auth.module";
@@ -72,6 +73,7 @@ import { ThreatModelingModule } from "./threat-modeling/threat-modeling.module";
     RequirementsModule,
     ReportsModule,
     AnalyticsModule,
+    AiModule,
   ],
   controllers: [HealthController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],

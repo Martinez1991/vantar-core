@@ -25,11 +25,14 @@ system-of-record colaborativo de threat modeling.
 - **Framework de análise de risco** (P×I, residual, aceite)
 - **Biblioteca de requisitos ASVS**
 - **Threat Modeling** (gerador/curador STRIDE + **integração ThreatAtlas**)
+- **Security Design Review por IA** — um **único agente** com **prompt básico**
+  (1 chamada de LLM + fallback heurístico STRIDE). O multi-agent (LangGraph) com
+  prompts complexos é **Enterprise**.
 - **Templates de Security Review** + relatório por projeto
 - **API REST pública** (OpenAPI em `/docs`)
 - **Self-host de referência** (Docker Compose), multi-tenant com Postgres RLS
 
-> A oferta **Enterprise** (SaaS gerenciado, IA AppSec, integrações
+> A oferta **Enterprise** (SaaS gerenciado, IA AppSec **multi-agent**, integrações
 > GitHub/GitLab/Jira/Confluence, SSO/SCIM, relatórios executivos, suporte) é
 > comercial e vive em repositório separado. Este framework funciona **sem** ela.
 
@@ -58,6 +61,7 @@ npm run dev:api
 | Plano | Stack |
 |---|---|
 | **Business Plane** | NestJS + TypeScript |
+| **AI Agent Plane** | Python / FastAPI — agente único, prompt básico (Ollama opcional) |
 | **Data** | PostgreSQL (RLS multi-tenant), migrations TypeORM |
 | **AuthN/Z** | JWT RS256 + refresh (rotação) + MFA TOTP · RBAC |
 | **System-of-record** | OWASP ThreatAtlas (integração push/pull) |

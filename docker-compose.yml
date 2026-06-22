@@ -1,5 +1,5 @@
-# Self-host de referência do OWASP Security Design Review Framework (headless).
-# Postgres (com RLS) + API. Sem UI, IA ou integrações corporativas (Enterprise).
+# Reference self-host for the OWASP Security Design Review Framework (headless).
+# Postgres (RLS) + API + single-agent AI. No UI or enterprise integrations.
 services:
   postgres:
     image: pgvector/pgvector:pg16
@@ -37,6 +37,7 @@ services:
       APP_DATABASE_URL: postgresql://vantar_app:${APP_DB_PASSWORD:-vantar_app}@postgres:5432/${POSTGRES_DB:-vantar}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-12h}
+      AGENTS_URL: http://agents:8000
     command:
       - sh
       - -c
@@ -47,6 +48,27 @@ services:
       timeout: 5s
       retries: 6
       start_period: 30s
+
+  # AI Agent Plane (open core): single agent, basic prompt. Degrades to the
+  # STRIDE heuristic when no LLM (Ollama) is configured.
+  agents:
+    build:
+      context: .
+      dockerfile: apps/agents/Dockerfile
+    container_name: vantar-core-agents
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Optional: point to an Ollama server to enable the single LLM call.
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+      AI_USE_LLM: ${AI_USE_LLM:-true}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
 
 volumes:
   pg_data:

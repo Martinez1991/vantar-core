@@ -131,4 +131,16 @@ describe("Vantar Core API (e2e)", () => {
       .set("Authorization", `Bearer ${token}`)
       .expect(400);
   });
+
+  it("ai: status responde com flag de disponibilidade (single-agent)", async () => {
+    const login = await request(http)
+      .post("/api/auth/login")
+      .send({ email: "ownerA@e2e.com", password: "senha12345" })
+      .expect(201);
+    const res = await request(http)
+      .get("/api/ai/status")
+      .set("Authorization", `Bearer ${login.body.accessToken}`)
+      .expect(200);
+    expect(typeof res.body.available).toBe("boolean");
+  });
 });

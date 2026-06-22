@@ -38,3 +38,18 @@ jobs:
         run: npm run migration:run --workspace @vantar/api
       - name: E2E
         run: npm run test:e2e --workspace @vantar/api
+
+  agents:
+    name: AI Agent Plane (single-agent)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/agents
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Install deps
+        run: pip install -r requirements.txt pytest pytest-cov
+      - name: Pytest (coverage ≥ 80%)
+        run: python -m pytest tests --cov=app --cov-report=term-missing --cov-fail-under=80 -q

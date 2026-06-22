@@ -26,12 +26,15 @@ modeling.
 - **Risk analysis framework** (likelihood × impact, residual, acceptance)
 - **ASVS requirements library**
 - **Threat Modeling** (STRIDE generator/curator + **ThreatAtlas integration**)
+- **AI Security Design Review** — a **single agent** with a **basic prompt**
+  (one LLM call + STRIDE heuristic fallback). The multi-agent orchestration
+  (LangGraph) with complex prompts is **Enterprise**.
 - **Security Review templates** + per-project report
 - **Public REST API** (OpenAPI at `/docs`)
 - **Reference self-host** (Docker Compose), multi-tenant with Postgres RLS
 
-> The **Enterprise** offering (managed SaaS, AppSec AI, GitHub/GitLab/Jira/
-> Confluence integrations, SSO/SCIM, executive reports, support) is commercial
+> The **Enterprise** offering (managed SaaS, **multi-agent** AppSec AI,
+> GitHub/GitLab/Jira/Confluence integrations, SSO/SCIM, executive reports, support) is commercial
 > and lives in a separate repository. This framework works **without** it.
 
 ## Getting started
@@ -59,6 +62,7 @@ npm run dev:api
 | Plane | Stack |
 |---|---|
 | **Business Plane** | NestJS + TypeScript |
+| **AI Agent Plane** | Python / FastAPI — single agent, basic prompt (Ollama optional) |
 | **Data** | PostgreSQL (multi-tenant RLS), TypeORM migrations |
 | **AuthN/Z** | JWT RS256 + refresh (rotation) + TOTP MFA · RBAC |
 | **System-of-record** | OWASP ThreatAtlas (push/pull integration) |
