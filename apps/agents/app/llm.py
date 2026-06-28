@@ -12,6 +12,8 @@ from typing import Any, Optional
 
 import httpx
 
+from .egress import assert_url_allowed
+
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://ollama:11434").rstrip("/")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1")
 LLM_ENABLED = os.getenv("AI_USE_LLM", "true").lower() == "true"
@@ -27,6 +29,7 @@ async def is_available() -> bool:
     if not LLM_ENABLED:
         return False
     try:  # pragma: no cover - network IO (needs a live Ollama)
+        assert_url_allowed(f"{OLLAMA_URL}/api/tags")  # SEC-02: anti-SSRF/egress
         async with httpx.AsyncClient(timeout=5) as client:
             res = await client.get(f"{OLLAMA_URL}/api/tags")
             if res.status_code != 200:
@@ -42,6 +45,7 @@ async def generate_json(system: str, prompt: str) -> Optional[dict[str, Any]]:
     if not LLM_ENABLED:
         return None
     try:  # pragma: no cover - network IO (needs a live Ollama)
+        assert_url_allowed(f"{OLLAMA_URL}/api/generate")  # SEC-02: anti-SSRF/egress
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
             res = await client.post(
                 f"{OLLAMA_URL}/api/generate",

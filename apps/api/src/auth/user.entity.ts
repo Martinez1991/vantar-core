@@ -52,6 +52,15 @@ export class User {
   @Column({ type: "boolean", default: false })
   mfaEnabled!: boolean;
 
+  // --- Anti brute-force / account lockout (RS-IAM-004, SEC-03) ---
+  // Tentativas de login malsucedidas consecutivas; zera no sucesso.
+  @Column({ type: "int", default: 0 })
+  failedLoginAttempts!: number;
+
+  // Quando preenchido e no futuro, o login é recusado até essa data.
+  @Column({ type: "timestamptz", nullable: true })
+  lockedUntil!: Date | null;
+
   @CreateDateColumn()
   createdAt!: Date;
 }
