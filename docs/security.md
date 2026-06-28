@@ -1,59 +1,59 @@
-# Segurança (núcleo aberto)
+# Security (open core)
 
-O Vantar faz *dogfooding* do próprio domínio: segue OWASP ASVS/STRIDE e práticas
-de design seguro. Esta página cobre os controles do **núcleo aberto**.
+Vantar dogfoods its own domain: it follows OWASP ASVS/STRIDE and secure-design
+practices. This page covers the **open-core** controls.
 
-## Identidade & acesso
+## Identity & access
 
-- **JWT RS256** com rotação de **refresh token** (hash SHA-256; rotação a cada uso).
-- **MFA TOTP** (otplib) opcional por usuário.
+- **JWT RS256** with **refresh token** rotation (SHA-256 hash; rotated on each use).
+- **TOTP MFA** (otplib), optional per user.
 - **RBAC**: `owner` / `admin` / `appsec` / `developer` / `viewer`.
-- **Account lockout / anti brute-force** (SEC-03): após **5** falhas consecutivas
-  a conta é bloqueada por janela **exponencial** (15→60min); sucesso zera o
-  contador; falhas de MFA também contam. Configurável por env
+- **Account lockout / anti brute-force** (SEC-03): after **5** consecutive
+  failures the account is locked for an **exponential** window (15→60min); a
+  success resets the counter; MFA failures count too. Configurable via env
   (`AUTH_LOCKOUT_THRESHOLD` / `_BASE_MINUTES` / `_MAX_MINUTES`).
-- Senhas com **bcrypt**; segredos nunca retornam em respostas nem em logs.
+- Passwords with **bcrypt**; secrets never returned in responses or logs.
 
-## Isolamento de tenant (RLS)
+## Tenant isolation (RLS)
 
-Defesa em profundidade: queries escopadas por `tenantId` **e** Row-Level Security
-forçada no banco (role não-superuser `vantar_app` + política `tenant_isolation`
-via `app.current_tenant`). Um tenant não enxerga dados de outro mesmo em caso de
-query mal escopada.
+Defense in depth: queries scoped by `tenantId` **and** forced Row-Level Security in
+the database (non-superuser role `vantar_app` + `tenant_isolation` policy via
+`app.current_tenant`). A tenant cannot see another tenant's data even with a
+mis-scoped query.
 
-## Guardrails de IA
+## AI guardrails
 
-- **Sanitização anti prompt-injection**: padrões de injeção são neutralizados nas
-  entradas (IaC/OpenAPI/descrição) antes do LLM (RS-LLM-001).
-- **Redaction de PII/segredos** antes do LLM (e-mail, CPF, cartão, chaves AWS,
-  JWT, private keys…): nada sensível trafega para o modelo (RS-LLM-002).
-- **Egress / anti-SSRF** (SEC-02): toda saída HTTP do AI plane passa por um guard
-  que aceita só http/https, **bloqueia sempre o IMDS** (169.254.169.254) e recusa
-  faixas privadas/loopback salvo allowlist (host do Ollama é confiável). Ver
-  [IA](ai.md) e OWASP LLM Top 10.
+- **Anti prompt-injection sanitization**: injection patterns are neutralized in the
+  inputs (IaC/OpenAPI/description) before the LLM (RS-LLM-001).
+- **PII/secret redaction** before the LLM (email, CPF, card, AWS keys, JWT, private
+  keys…): nothing sensitive travels to the model (RS-LLM-002).
+- **Egress / anti-SSRF** (SEC-02): every outbound HTTP call from the AI plane goes
+  through a guard that allows http/https only, **always blocks IMDS**
+  (169.254.169.254) and rejects private/loopback ranges unless allowlisted (the
+  Ollama host is trusted). See [AI](ai.md) and the OWASP LLM Top 10.
 
-## Cabeçalhos & transporte
+## Headers & transport
 
-**Helmet** (CSP/headers de segurança), **CORS** por allowlist (env), validação e
-sanitização globais (`class-validator`, whitelist + `forbidNonWhitelisted`).
+**Helmet** (CSP/security headers), **CORS** allowlist (env), global validation and
+sanitization (`class-validator`, whitelist + `forbidNonWhitelisted`).
 
-## Primitivas de criptografia (para a Enterprise)
+## Cryptography primitives (for Enterprise)
 
-O `common/` expõe primitivas abertas reutilizáveis:
+`common/` exposes reusable open primitives:
 
-- **`secret-cipher`** — cifra simétrica **AES-256-GCM** (formato versionado
-  `enc:v1:`), pronta como *column transformer* TypeORM e **KMS-ready**. No núcleo
-  aberto não há segredos de integração a cifrar; a Enterprise liga essa primitiva
-  aos tokens Jira/SCM/Confluence e ao client secret OIDC (SEC-01).
-- **`ssrf-guard`** — `assertPublicHttpUrl` (resolve o host e recusa privado/IMDS),
-  usado pela Enterprise no fetch server-side do issuer OIDC.
+- **`secret-cipher`** — symmetric **AES-256-GCM** cipher (versioned `enc:v1:`
+  format), ready as a TypeORM column transformer and **KMS-ready**. The open core
+  has no integration secrets to encrypt; the Enterprise edition wires this
+  primitive onto Jira/SCM/Confluence tokens and the OIDC client secret (SEC-01).
+- **`ssrf-guard`** — `assertPublicHttpUrl` (resolves the host and rejects
+  private/IMDS), used by Enterprise for the server-side fetch of the OIDC issuer.
 
 ## Supply chain
 
-Imagens assinadas com **cosign** (keyless) + **proveniência SLSA** no release.
-Recomenda-se SCA/SAST/secret-scan no CI (dogfooding do próprio Security Gate).
+Images signed with **cosign** (keyless) + **SLSA provenance** on release.
+SCA/SAST/secret-scan in CI are recommended (dogfooding the Security Gate itself).
 
 ## Threat modeling
 
-O módulo `threat-modeling` gera/curadoria **STRIDE** e sincroniza com o **OWASP
-ThreatAtlas** (system-of-record colaborativo) via API Tokens.
+The `threat-modeling` module generates/curates **STRIDE** and synchronizes with
+**OWASP ThreatAtlas** (the collaborative system-of-record) via API Tokens.

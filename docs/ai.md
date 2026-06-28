@@ -1,34 +1,34 @@
-# IA — Security Design Review (single-agent)
+# AI — Security Design Review (single-agent)
 
-> O núcleo aberto faz a revisão de segurança por IA com **um agente** e um
-> **prompt básico**. A IA **multi-agente** é Enterprise e não é coberta aqui.
+> The open core does AI security review with **one agent** and a **basic prompt**.
+> **Multi-agent** AI is Enterprise and is not covered here.
 
-## Como funciona
+## How it works
 
-1. A API enfileira um job de review com as entradas (descrição, OpenAPI,
-   Terraform, manifests k8s) — todas **texto**, nunca URLs baixadas.
-2. As entradas são **sanitizadas** (anti prompt-injection + redaction de
-   PII/segredos) — ver [Segurança](security.md).
-3. O agente faz **uma** chamada ao LLM (provider plugável; **Ollama** por padrão
-   no self-host) pedindo achados STRIDE estruturados.
-4. **Fallback honesto**: se o LLM não estiver disponível ou falhar, o resultado
-   vem de uma **heurística STRIDE** e é **rotulado** como heurístico. Nunca se
-   finge geração por IA.
+1. The API enqueues a review job with the inputs (description, OpenAPI, Terraform,
+   k8s manifests) — all **text**, never URLs to be fetched.
+2. Inputs are **sanitized** (anti prompt-injection + PII/secret redaction) — see
+   [Security](security.md).
+3. The agent makes **one** LLM call (pluggable provider; **Ollama** by default for
+   self-host) asking for structured STRIDE findings.
+4. **Honest fallback**: if the LLM is unavailable or fails, the result comes from a
+   **STRIDE heuristic** and is **labeled** as heuristic. AI generation is never
+   faked.
 
 ## Guardrails (OWASP LLM Top 10)
 
-| Risco LLM | Controle no núcleo aberto |
+| LLM risk | Open-core control |
 |---|---|
-| LLM01 Prompt Injection | Neutralização de padrões de injeção nas entradas (untrusted input) |
-| LLM02 Insecure Output | Saída validada/estruturada antes de uso |
-| LLM06 Sensitive Info Disclosure | Redaction de PII/segredos **antes** do envio ao LLM |
-| LLM/SSRF (egress) | Guard de egress: só http/https, **IMDS bloqueado**, faixas privadas salvo allowlist |
+| LLM01 Prompt Injection | Neutralization of injection patterns in inputs (untrusted input) |
+| LLM02 Insecure Output | Output validated/structured before use |
+| LLM06 Sensitive Info Disclosure | PII/secret redaction **before** sending to the LLM |
+| LLM/SSRF (egress) | Egress guard: http/https only, **IMDS blocked**, private ranges unless allowlisted |
 
-## Provider plugável
+## Pluggable provider
 
-`llm.py` abstrai o provider. No self-host, **Ollama** (`OLLAMA_URL`,
-`OLLAMA_MODEL`). O guard de egress é aplicado **antes de cada chamada** HTTP —
-mesmo apontando para um host interno, o IMDS é sempre recusado.
+`llm.py` abstracts the provider. For self-host, **Ollama** (`OLLAMA_URL`,
+`OLLAMA_MODEL`). The egress guard is applied **before every** HTTP call — even when
+pointing at an internal host, IMDS is always rejected.
 
-> A escolha de um LLM **gerenciado** (ex.: Bedrock) é uma decisão da operação
-> SaaS/Enterprise; o núcleo aberto roda 100% self-host com Ollama.
+> Choosing a **managed** LLM (e.g. Bedrock) is a SaaS/Enterprise operations
+> decision; the open core runs 100% self-host with Ollama.

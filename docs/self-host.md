@@ -1,50 +1,49 @@
 # Self-host (Docker Compose)
 
-Self-host de referência do núcleo aberto. Requisitos: **Node.js ≥ 20** e
-**Docker**.
+Reference self-host of the open core. Requirements: **Node.js ≥ 20** and **Docker**.
 
-## Subir
+## Start
 
 ```bash
 npm install
-npm run compose:up    # Postgres + API + Agents (migrations + seed automáticos)
+npm run compose:up    # Postgres + API + Agents (migrations + seed automatic)
 # API     → http://localhost:4000
 # OpenAPI → http://localhost:4000/docs
 ```
 
-O contêiner da API executa, na subida, `migrate` → `seed` (idempotente) →
-servidor. Sobem três serviços: `postgres`, `api`, `agents`.
+On startup the API container runs `migrate` → `seed` (idempotent) → server. Three
+services come up: `postgres`, `api`, `agents`.
 
-## Sem Docker (dev)
+## Without Docker (dev)
 
 ```bash
 npm install
-# suba um Postgres e provisione o role de app (RLS):
+# start a Postgres and provision the app role (RLS):
 #   psql ... -f infra/postgres/init/02-app-role.sql
 npm run migration:run --workspace @vantar/api
 npm run dev:api
 ```
 
-## Variáveis de ambiente principais
+## Main environment variables
 
-| Variável | Default (dev) | Para quê |
+| Variable | Default (dev) | Purpose |
 |---|---|---|
-| `DATABASE_URL` | `postgres://vantar:vantar@postgres:5432/vantar` | migrate/seed (superuser; ignora RLS) |
-| `APP_DATABASE_URL` | role `vantar_app` | runtime (não-superuser; sujeito ao RLS) |
-| `JWT_PRIVATE_KEY` / `JWT_PUBLIC_KEY` | par efêmero (aviso) | assinatura RS256 — **definir em produção** |
-| `CORS_ORIGINS` | `http://localhost:3000` | allowlist de origens |
-| `AGENTS_URL` | `http://agents:8000` | endpoint do AI Agent Plane |
+| `DATABASE_URL` | `postgres://vantar:vantar@postgres:5432/vantar` | migrate/seed (superuser; bypasses RLS) |
+| `APP_DATABASE_URL` | role `vantar_app` | runtime (non-superuser; subject to RLS) |
+| `JWT_PRIVATE_KEY` / `JWT_PUBLIC_KEY` | ephemeral pair (warns) | RS256 signing — **set in production** |
+| `CORS_ORIGINS` | `http://localhost:3000` | origins allowlist |
+| `AGENTS_URL` | `http://agents:8000` | AI Agent Plane endpoint |
 | `AUTH_LOCKOUT_THRESHOLD` / `_BASE_MINUTES` / `_MAX_MINUTES` | 5 / 15 / 60 | account lockout (SEC-03) |
-| `AI_USE_LLM` | `true` | liga a chamada ao LLM (senão, heurística) |
-| `OLLAMA_URL` / `OLLAMA_MODEL` | `http://ollama:11434` / `llama3.1` | provider LLM self-host |
-| `EGRESS_ALLOWLIST` | — | hosts extra liberados no guard de egress (IMDS sempre bloqueado) |
+| `AI_USE_LLM` | `true` | enable the LLM call (otherwise heuristic) |
+| `OLLAMA_URL` / `OLLAMA_MODEL` | `http://ollama:11434` / `llama3.1` | self-host LLM provider |
+| `EGRESS_ALLOWLIST` | — | extra hosts allowed by the egress guard (IMDS always blocked) |
 
-> O LLM é **opcional**: sem Ollama, a revisão por IA cai na **heurística STRIDE**
-> (rotulada como tal). Ver [IA](ai.md).
+> The LLM is **optional**: with no Ollama, AI review falls back to the **STRIDE
+> heuristic** (labeled as such). See [AI](ai.md).
 
-## Produção (recomendações)
+## Production (recommendations)
 
-- Definir `JWT_PRIVATE_KEY`/`JWT_PUBLIC_KEY` persistentes (não efêmeros).
-- TLS/Ingress à frente da API; `CORS_ORIGINS` restrito.
-- Backups do Postgres + teste de restore; migrations revisadas (forward-only).
-- Verificar a **assinatura cosign** e a **proveniência SLSA** das imagens.
+- Set persistent `JWT_PRIVATE_KEY`/`JWT_PUBLIC_KEY` (not ephemeral).
+- TLS/Ingress in front of the API; restricted `CORS_ORIGINS`.
+- Postgres backups + restore test; reviewed migrations (forward-only).
+- Verify the images' **cosign signature** and **SLSA provenance**.

@@ -1,57 +1,57 @@
-# Arquitetura (núcleo aberto)
+# Architecture (open core)
 
-## Estilo
+## Style
 
-API **headless** modular (NestJS) — a fonte da verdade de negócio (RBAC,
-multi-tenant, domínio de Security Design Review) — com um **AI Agent Plane**
-separado (FastAPI) para a revisão por IA, chamado por **HTTP** (`AGENTS_URL`).
-Degradação honesta quando a IA não está disponível.
+A modular **headless** API (NestJS) — the business source of truth (RBAC,
+multi-tenancy, the Security Design Review domain) — with a separate **AI Agent
+Plane** (FastAPI) for AI review, called over **HTTP** (`AGENTS_URL`). Honest
+degradation when AI is unavailable.
 
 ```mermaid
 flowchart LR
-  Client[Cliente / CI] -->|REST + JWT| API[Business Plane\nNestJS]
-  API -->|RLS por tenant| DB[(PostgreSQL\n+ pgvector)]
+  Client[Client / CI] -->|REST + JWT| API[Business Plane\nNestJS]
+  API -->|per-tenant RLS| DB[(PostgreSQL\n+ pgvector)]
   API -->|HTTP| Agents[AI Agent Plane\nFastAPI single-agent]
-  Agents -->|opcional| LLM[(Ollama\nself-host)]
-  Agents -.->|guard de egress\nIMDS bloqueado| LLM
+  Agents -->|optional| LLM[(Ollama\nself-host)]
+  Agents -.->|egress guard\nIMDS blocked| LLM
 ```
 
-> O self-host de referência do núcleo aberto sobe **três serviços**: `postgres`,
-> `api`, `agents`. Mensageria (RabbitMQ) e cache (Redis) são usados na operação
-> Enterprise/SaaS, não no compose do núcleo.
+> The reference self-host of the open core runs **three services**: `postgres`,
+> `api`, `agents`. Messaging (RabbitMQ) and cache (Redis) are used in
+> Enterprise/SaaS operation, not in the open-core compose.
 
-## Módulos abertos
+## Open modules
 
-`auth` (identidade, RBAC, MFA), `tenants`, `projects`, `questionnaires` (maturidade),
-`risks` (framework de risco), `requirements` (ASVS), `threat-modeling` (STRIDE +
-sync ThreatAtlas), `reports`, `analytics`, `audit`, `metrics`, `health`, `ai`
-(orquestração single-agent), `notifications` (event bus), `common` (tenant context,
-primitivas de cripto/anti-SSRF).
+`auth` (identity, RBAC, MFA), `tenants`, `projects`, `questionnaires` (maturity),
+`risks` (risk framework), `requirements` (ASVS), `threat-modeling` (STRIDE +
+ThreatAtlas sync), `reports`, `analytics`, `audit`, `metrics`, `health`, `ai`
+(single-agent orchestration), `notifications` (event bus), `common` (tenant
+context, crypto / anti-SSRF primitives).
 
-## Multi-tenant por RLS
+## Multi-tenancy via RLS
 
-Isolamento por **PostgreSQL Row-Level Security**: as tabelas de negócio têm
-`ENABLE/FORCE ROW LEVEL SECURITY` + política `tenant_isolation` usando o GUC
-`app.current_tenant`. O runtime conecta com um role **não-superuser**
-(`vantar_app`) sujeito ao RLS; o GUC é setado por requisição a partir do tenant do
-JWT (via `typeorm-transactional`/CLS). Tabelas de auth (`users`, `tenants`,
-`refresh_tokens`) ficam fora do RLS — login/refresh ocorrem sem contexto de tenant.
+Isolation through **PostgreSQL Row-Level Security**: business tables have
+`ENABLE/FORCE ROW LEVEL SECURITY` + a `tenant_isolation` policy using the
+`app.current_tenant` GUC. The runtime connects with a **non-superuser** role
+(`vantar_app`) subject to RLS; the GUC is set per request from the JWT's tenant
+(via `typeorm-transactional`/CLS). Auth tables (`users`, `tenants`,
+`refresh_tokens`) sit outside RLS — login/refresh happen without a tenant context.
 
 ## AI Agent Plane (single-agent)
 
-O núcleo aberto roda **um agente** com **um prompt básico**: uma chamada ao LLM
-(via provider plugável — Ollama por padrão no self-host) com **fallback heurístico
-STRIDE** quando o LLM não responde. Nada de "fingir" geração por IA — sem LLM, o
-resultado vem da heurística e é rotulado como tal. Entradas (descrição/OpenAPI/
-IaC) são sanitizadas antes do LLM. Detalhes em [IA](ai.md).
+The open core runs **one agent** with a **basic prompt**: a single LLM call (via a
+pluggable provider — Ollama by default for self-host) with a **STRIDE heuristic
+fallback** when the LLM does not answer. No faking AI generation — with no LLM, the
+result comes from the heuristic and is labeled as such. Inputs (description/
+OpenAPI/IaC) are sanitized before the LLM. Details in [AI](ai.md).
 
 ## Migrations & schema
 
-Schema gerido por **migrations** forward-only (TypeORM; `synchronize` desligado).
-Na subida: `migrate` → `seed` (idempotente) → servidor. Novas tabelas de negócio
-recebem GRANT ao `vantar_app` + RLS.
+Schema managed by forward-only **migrations** (TypeORM; `synchronize` off). On
+startup: `migrate` → `seed` (idempotent) → server. New business tables get a GRANT
+to `vantar_app` + RLS.
 
 ## Supply chain & self-host
 
-Imagens assinadas (**cosign** keyless) com **proveniência SLSA** no release.
-Self-host de referência via Docker Compose — ver [Self-host](self-host.md).
+Images signed with **cosign** (keyless) and **SLSA provenance** on release.
+Reference self-host via Docker Compose — see [Self-host](self-host.md).
