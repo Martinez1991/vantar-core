@@ -1,47 +1,57 @@
-# Vantar Core — OWASP Security Design Review Framework
+# Vantar Core — Security Design Review Framework
 
-> Núcleo **aberto** (Apache-2.0) do Vantar: uma plataforma headless de **Security
-> Design Review** — questionários de arquitetura, framework de risco, biblioteca
-> de requisitos (ASVS), threat modeling (STRIDE) e um **agente único** de IA para
-> revisão de segurança. Complementar ao [OWASP ThreatAtlas](https://owasp.org/) —
-> integra, não reimplementa.
+> The **open core** (Apache-2.0) of Vantar: a headless **Security Design Review**
+> platform — architecture questionnaires, a risk framework, an ASVS requirements
+> library, threat modeling (STRIDE) and a **single AI agent** for security review.
+> Complementary to [OWASP ThreatAtlas](https://owasp.org/) — it integrates, it
+> does not reimplement.
 
-## O que é (e o que não é)
+!!! warning "Affiliation notice"
+    `vantar-core` is **not yet an OWASP project**. "OWASP" is a registered
+    trademark of the OWASP Foundation, and the name/logo may only be used after a
+    project is formally accepted. Until then this is an **independent community
+    draft**. OWASP branding is intentionally withheld and will be enabled only
+    upon acceptance into the OWASP Incubator. See
+    [Introduction](00-introduction.md).
 
-Vantar é **Open Core**. Esta documentação cobre **apenas o núcleo aberto**
-(`vantar-core`). Recursos comerciais ficam na Enterprise e **não** são detalhados
-aqui.
+## What it is (and isn't)
 
-| Aberto (este repositório) | Enterprise (não coberto aqui) |
+Vantar is **Open Core**. This documentation covers **only the open core**
+(`vantar-core`). Commercial features live in the Enterprise edition and are **not**
+detailed here.
+
+| Open (this repository) | Enterprise (not covered here) |
 |---|---|
-| API REST headless (NestJS), multi-tenant com RLS | IA **multi-agente** + operação gerenciada (SaaS) |
-| Questionários de maturidade/arquitetura | Integrações Jira/SCM/Confluence (gate em PR) |
-| Framework de risco (probabilidade × impacto) | SSO/OIDC/SAML + SCIM |
-| Biblioteca de requisitos (ASVS) | Billing/assinaturas |
-| Threat Modeling (gerador/curador STRIDE) + integração ThreatAtlas | Paridade ThreatAtlas gerenciada |
-| **IA single-agent** (1 chamada LLM + fallback heurístico STRIDE) | — |
-| API REST pública (OpenAPI) | — |
-| Self-host de referência (Docker Compose) | — |
+| Headless REST API (NestJS), multi-tenant with RLS | **Multi-agent** AI + managed operation (SaaS) |
+| Maturity/architecture questionnaires | Jira/SCM/Confluence integrations (PR gate) |
+| Risk framework (likelihood × impact) | SSO/OIDC/SAML + SCIM |
+| ASVS requirements library | Billing/subscriptions |
+| Threat Modeling (STRIDE generator/curator) + ThreatAtlas integration | Managed ThreatAtlas parity |
+| **Single-agent AI** (1 LLM call + STRIDE heuristic fallback) | — |
+| Public REST API (OpenAPI) | — |
+| Reference self-host (Docker Compose) | — |
 
-## Como ler
+## How to read
 
-| Documento | Cobre |
+| Document | Covers |
 |---|---|
-| [Arquitetura](architecture.md) | Estilo, multi-tenant (RLS), plano de IA, topologia self-host |
-| [Segurança](security.md) | AuthN/MFA/lockout, RLS, guardrails de IA, egress/anti-SSRF, supply chain |
-| [IA](ai.md) | Single-agent design review, guardrails, OWASP LLM Top 10, fallback honesto |
-| [API](api.md) | Recursos REST, autenticação, contratos, OpenAPI |
-| [Self-host](self-host.md) | Subir localmente com Docker Compose, env, migrations |
+| [Introduction](00-introduction.md) | Project status, OWASP affiliation & trademark, scope |
+| [Architecture](architecture.md) | Style, multi-tenancy (RLS), AI plane, self-host topology |
+| [Security](security.md) | AuthN/MFA/lockout, RLS, AI guardrails, egress/anti-SSRF, supply chain |
+| [AI](ai.md) | Single-agent design review, guardrails, OWASP LLM Top 10, honest fallback |
+| [API](api.md) | REST resources, authentication, contracts, OpenAPI |
+| [Self-host](self-host.md) | Run locally with Docker Compose, env, migrations |
 
 ## Stack
 
-**NestJS 10 + TypeORM 0.3 + PostgreSQL/pgvector** (Business Plane headless),
-**FastAPI** (AI Agent Plane, single-agent, chamado por HTTP), **Ollama** (LLM
-self-host, opcional). Self-host de referência via Docker Compose (`postgres` +
-`api` + `agents`), sem dependência de serviço proprietário de nuvem.
+**NestJS 10 + TypeORM 0.3 + PostgreSQL/pgvector** (headless Business Plane),
+**FastAPI** (AI Agent Plane, single-agent, called over HTTP), **Ollama** (self-host
+LLM, optional). Reference self-host via Docker Compose (`postgres` + `api` +
+`agents`), with no dependency on a proprietary cloud service.
 
-## Princípio de complementaridade (OWASP ThreatAtlas)
+## Complementarity principle (OWASP ThreatAtlas)
 
-O OSS **gera o conteúdo** (DFDs, ameaças STRIDE, mitigações, scores) e
-**sincroniza** com o ThreatAtlas via API Tokens (push/pull). Não recria o editor
-visual, o versionamento nem a base colaborativa do ThreatAtlas — integra com ele.
+The OSS **generates the content** (DFDs, STRIDE threats, mitigations, scores) and
+**synchronizes** with ThreatAtlas via API Tokens (push/pull). It does not recreate
+ThreatAtlas's visual editor, versioning or collaborative base — it integrates with
+it.

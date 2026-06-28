@@ -1,15 +1,14 @@
-site_name: Vantar Core — OWASP Security Design Review Framework
-site_description: Documentação do núcleo aberto (Apache-2.0) — Security Design Review headless
+site_name: Vantar Core — Security Design Review Framework
+site_description: Open core (Apache-2.0) documentation — headless Security Design Review. Independent community draft (not yet an OWASP project).
 site_url: https://martinez1991.github.io/vantar-core/
 repo_url: https://github.com/Martinez1991/vantar-core
 repo_name: Martinez1991/vantar-core
 docs_dir: docs
 site_dir: site
-copyright: Apache-2.0 · OWASP Security Design Review Framework (núcleo aberto)
+copyright: Apache-2.0 · Security Design Review Framework — independent community draft (not yet an OWASP project)
 
 theme:
   name: material
-  language: pt
   palette:
     - scheme: slate
       primary: teal
@@ -17,7 +16,6 @@ theme:
   features:
     - navigation.sections
     - navigation.top
-    - navigation.instant
     - navigation.tracking
     - content.code.copy
     - search.suggest
@@ -39,11 +37,23 @@ markdown_extensions:
 
 plugins:
   - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: pt
+          name: Português (BR)
+          build: true
 
 nav:
-  - Início: index.md
-  - Arquitetura: architecture.md
-  - Segurança: security.md
-  - IA (single-agent): ai.md
-  - API REST: api.md
+  - Home: index.md
+  - Introduction: 00-introduction.md
+  - Architecture: architecture.md
+  - Security: security.md
+  - AI (single-agent): ai.md
+  - REST API: api.md
   - Self-host: self-host.md

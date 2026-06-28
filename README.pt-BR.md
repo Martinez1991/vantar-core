@@ -2,13 +2,24 @@
 
 <div align="center">
 
-# OWASP Security Design Review Framework
+# Security Design Review Framework
 
 **Núcleo aberto do Vantar — Security Design Review, Threat Modeling e Risk Analysis.**
 
 `Apache-2.0` · headless (API) · **Complementar** ao OWASP ThreatAtlas
 
 </div>
+
+---
+
+> ### ⚠️ Aviso de afiliação
+>
+> O `vantar-core` **ainda não é um projeto OWASP**. "OWASP" é marca registrada da
+> OWASP Foundation, e o nome/logo só podem ser usados após a aceitação formal de um
+> projeto. Até lá, este trabalho é um **rascunho comunitário independente**. A marca
+> OWASP neste repositório está intencionalmente retida e só será habilitada mediante
+> aceitação no **OWASP Incubator**. Veja
+> [`docs/00-introduction.md`](docs/00-introduction.md).
 
 ---
 
